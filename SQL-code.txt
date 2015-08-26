@@ -1,0 +1,457 @@
+----create table Liust_Student  
+----(
+----  lst_Sno char(20) primary key,
+----  lst_Sname char(20),
+----  lst_Sclasno char(20),
+----  lst_Ssex char(2) check(lst_Ssex='男' or lst_Ssex='女'),
+----  lst_Sage int check(lst_Sage>10 and lst_Sage<=100),
+----  lst_SHome char(20),
+----  lst_Scredit int,
+----  constraint FK_Stu_Class foreign key(lst_Sclasno) references Liust_Class
+----)
+
+----insert into Liust_Student
+----values('201326811411','黄腾虎','1302','男',20,'浙江',30)
+
+----create table Liust_Teacher
+----(
+----  lst_Tno char(20) primary key,
+----  lst_Tname char(20),
+----  lst_Tsex char(2) check(lst_Tsex='男'or lst_Tsex='女'),
+----  lst_Tage int check(lst_Tage>10 and lst_Tage<=100),
+----  lst_Tphone char(20),
+----  lst_Tposon char(20)
+----)
+
+--insert into Liust_Teacher
+--values('T01','刘端阳','男',34,'15700086745','副教授')
+----insert into Liust_Teacher
+----values('T03','于明远','男',33,'15700086734','副教授')
+
+----create table Liust_Class
+----(
+----  lst_Clno char(20) primary key,
+----  lst_Clname char(20),
+----  lst_Clmajor char(20),
+----  lst_Clschool char(20)
+----)
+
+----insert into Liust_Class
+----values('1302','计算机','计算机','浙江工业大学')
+--insert into Liust_Class
+--values('1301','计算机','计算机','浙江工业大学')
+
+
+----create table Liust_Course
+----(
+----   lst_Cno char(20),
+----   lst_Cname char(20),
+----   lst_Tno char(20),
+----   lst_Tbgtime char(20),
+----   lst_Tlrntime int,
+----   lst_Tcredit int,
+----   lst_Ttype char(20) check(lst_Ttype='考试' or lst_Ttype='考查'),
+----   primary key(lst_Cno,lst_Tno)
+----   constraint FK_Tea_Class foreign key(lst_Tno) references Liust_Teacher
+   
+----)
+
+
+----insert into Liust_Course
+----values('C01','数据结构','T01','2015(1)',64,4,'考试')
+
+----insert into Liust_Course
+----values('C02','数据库','T02','2015(2)',64,4,'考试')
+
+
+
+--create table Liust_Report
+--(
+--   lst_Sno char(20),
+--   lst_Cno char(20),
+--   lst_Grade float,
+--   lst_Tno char(20),
+--   lst_Tbgtime char(20),
+--   lst_LearnYear char(20),
+--   primary key(lst_Sno,lst_Cno),
+--   constraint FK_Stu_Rpt foreign key(lst_Sno) references Liust_Student,
+--   constraint FK_Cla_Rpt foreign key(lst_Cno,lst_Tno) references Liust_Course
+--)
+--select *
+--from Liust_Report
+
+
+--grant alter on Liust_Report
+--to tach1
+
+--grant alter on Liust_Student to tach1
+
+--grant alter on Liust_Class to tach1
+
+--alter table alter table Liust_Report CHECK CONSTRAINT All NOCHECK CONSTRAINT All
+
+--delete
+--from Liust_Student
+--where lst_Sno='201326811415'
+
+--alter table Liust_Report CHECK CONSTRAINT All
+
+--grant all privileges
+--on Liust_Report
+--to tach1
+
+----delete
+----from Liust_Report
+----where lst_Cno='C03'
+--drop table Liust_Report
+------insert into Liust_Report
+------values('201326811412','C01',100,'T01','2015(1)','2015')
+
+------insert into Liust_Report
+------values('201326811412','C02',98,'T02','2015(2)','2015')
+
+
+------insert into Liust_Report
+------values('201326811411','C02',90,'T02','2015(2)','2015')
+
+------insert into Liust_Report
+------values('201326811411','C01',88,'T01','2015(1)','2015')
+
+
+
+----delete
+----from Liust_Report where lst_Sno='201326811411'
+
+
+--create view Liust_StuGradeSort
+--as
+--select lst_Sno,cast(avg(lst_Grade) as decimal(18,2))平均成绩,lst_LearnYear
+--from Liust_Report
+--group by lst_Sno,lst_LearnYear
+--drop view Liust_StuGradeSort
+
+--grant all privileges
+--on Liust_StuGradeSort
+--to tach1
+
+----create table Liust_ClassCourse
+----(
+----   lst_Clno char(20),
+----   lst_Cno char(20),
+----   primary key(lst_Clno,lst_Cno),
+----   constraint FK_Cla_Course foreign key(lst_Clno) references Liust_Class,
+----  -- constraint FK_Class_CC foreign key(lst_Cno) references Liust_Course
+----)
+
+----insert into Liust_ClassCourse
+----values('1301','C01')
+
+
+
+
+--create view Liust_CGradeavgQ
+--as
+--select lst_Cno 课程编号,cast(avg(lst_Grade) as decimal(18,2)) 平均成绩,lst_Tbgtime 开课学期
+--from Liust_Report
+--group by lst_Cno,lst_Tbgtime
+
+--grant all privileges
+--on Liust_CGradeavgQ
+--to tach1
+
+--drop view Liust_CGradeavgQ
+
+--grant all privileges
+--on Liust_CGradeavgQ
+--to tach1
+----select* 
+----from Liust_CGradeavgQ
+
+
+----create view Liust_PerGrade
+----as
+----select 
+----Liust_Report.lst_Sno,Liust_Course.lst_Cname,lst_Tname,Liust_Report.lst_Grade,lst_Tcredit,Liust_Course.lst_Tbgtime
+----from
+----Liust_Report,Liust_Course,Liust_Teacher
+----where Liust_Report.lst_Cno=Liust_Course.lst_Cno
+----and Liust_Report.lst_Tno=Liust_Teacher.lst_Tno
+
+
+
+----create view Liust_CourTableQ
+----as
+----select 
+----Liust_Report.lst_Sno,Liust_Course.lst_Cname,lst_Tname,lst_Tcredit,Liust_Course.lst_Tbgtime
+----from
+----Liust_Report,Liust_Course,Liust_Teacher
+----where Liust_Report.lst_Cno=Liust_Course.lst_Cno
+----and Liust_Report.lst_Tno=Liust_Teacher.lst_Tno
+
+--create view Liust_TeaCourseQ
+--as
+--select Liust_Course.lst_Tno,lst_Tname,lst_Cno,lst_Cname,lst_Tlrntime,lst_Tcredit
+--from 
+--Liust_Course,Liust_Teacher
+--where Liust_Course.lst_Tno=Liust_Teacher.lst_Tno
+
+--create view BanCourseQ
+--as
+--select Liust_Class.lst_Clno,lst_Clname,Liust_Course.lst_Cno,lst_Cname,lst_Tlrntime,lst_Tcredit
+--from
+--Liust_Class,Liust_Course,Liust_ClassCourse
+--where Liust_ClassCourse.lst_Cno=Liust_Course.lst_Cno
+--and Liust_ClassCourse.lst_Clno=Liust_Class.lst_Clno
+
+--create view Liust_AreaCount
+--as
+--select lst_SHome,COUNT(lst_Sno) 地区人数
+--from 
+--Liust_Student
+--group by lst_SHome
+
+----create unique index ID_Student on Liust_Student(lst_Sno)
+----create unique index ID_Teacher on Liust_Teacher(lst_Tno)
+----create unique index ID_Course on Liust_Course(lst_Cno)
+----create unique index ID_Class on Liust_Class(lst_Clno)
+----create unique index ID_Report on Liust_Report(lst_Sno,lst_Cno)
+----create unique index ID_ClassCourse on Liust_ClassCourse(lst_Clno,lst_Cno)
+
+
+
+
+----grant all privileges 
+----on  Liust_Student
+----to tach1
+
+----grant all privileges 
+----on  Liust_Teacher
+----to tach1
+
+----grant all privileges 
+----on  Liust_Course
+----to tach1
+
+----grant all privileges 
+----on  Liust_Class
+----to tach1
+
+----grant all privileges 
+----on  Liust_Report
+----to tach1
+
+----grant all privileges 
+----on  Liust_Student
+----to tach1
+
+----grant all privileges 
+----on  Liust_ClassCourse
+----to tach1
+
+----grant all privileges
+----on Liust_AreaCount
+----to tach1
+
+----grant all privileges
+----on BanCourseQ
+----to tach1
+
+----grant all privileges
+----on Liust_TeaCourseQ
+----to tach1
+
+----grant all privileges
+----on Liust_PerGrade
+----to tach1
+
+----grant all privileges
+----on Liust_StuGradeSort
+----to tach1
+
+----grant all privileges
+----on Liust_CourTableQ
+----to tach1
+----select * 
+----from Liust_CourTableQ 
+----where lst_Tbgtime='2015(1)'
+
+--create view Liust_Pxian
+--as
+--select lst_Sno,lst_Sname,lst_Clmajor,lst_Clname,lst_SHome,lst_Scredit
+--from
+--Liust_Student,Liust_Class
+
+
+
+--drop view Liust_Pxian
+----grant all privileges
+----on Liust_Pxian
+----to tach1
+
+----自动生成学分的存储过程
+--create procedure Auto_GetCredit
+--@lst_Tno char(20),
+--@lst_Sno char(20),
+--@lst_Cno char(20)
+--as
+--begin
+--update Liust_Student
+--set lst_Scredit=lst_Scredit+(
+--    select lst_Tcredit
+--    from Liust_Course
+--    where @lst_Tno=lst_Tno and @lst_Cno=lst_Cno
+--  )
+--  where lst_Sno=@lst_Sno
+--  end
+
+--exec Auto_GetCredit 'T01','201326811412'
+--drop procedure Auto_GetCredit
+
+
+-----------触发器的建立
+--create trigger Delete_Teacher    教师删除
+--on Liust_Teacher
+--for delete
+--as
+--delete Liust_Report
+--from deleted
+--where Liust_Report.lst_Tno=deleted.lst_Tno
+--delete Liust_Course
+--from deleted
+--where Liust_Course.lst_Tno=deleted.lst_Tno
+
+--create trigger Delete_Student   学生删除
+--on Liust_Student
+--for delete
+--as
+--delete Liust_Report
+--from deleted
+--where Liust_Report.lst_Sno=deleted.lst_Sno
+
+
+--create trigger Delete_Ban     
+--on Liust_Class
+--for delete
+--as
+--delete Liust_Student
+--from deleted
+--where Liust_Student.lst_Sclasno=deleted.lst_Clno
+--delete Liust_ClassCourse
+--from deleted
+--where Liust_ClassCourse.lst_Clno=deleted.lst_Clno
+
+
+
+
+--create trigger Update_Course 
+--on Liust_Course
+--for update
+--as
+--if update(lst_Tcredit)
+--begin
+--update Liust_Student
+--set lst_Scredit=Lns.lst_Sno
+--from deleted De,inserted Lns,Liust_Report K
+--where K.lst_Sno=De.lst_Sno
+--end
+
+
+--create trigger Update_Teacher     
+--on Liust_Teacher
+--for update
+--as
+--if update(lst_Tno)
+--begin
+--update Liust_Report
+--set lst_Tno=Lns.lst_Tno
+--from deleted De,inserted Lns,Liust_Report K
+--where K.lst_Tno=De.lst_Tno
+--end
+--begin
+--update Liust_Course
+--set lst_Tno=Lns.lst_Tno
+--from deleted De,inserted Lns,Liust_Course Q
+--where Q.lst_Tno=De.lst_Tno
+--end
+
+
+--create trigger Update_Student  学生更新
+--on Liust_Student
+--for update
+--as
+--if update(lst_Sno)
+--begin
+--update Liust_Report
+--set lst_Sno=Lns.lst_Sno
+--from deleted De,inserted Lns,Liust_Report K
+--where K.lst_Sno=De.lst_Sno
+--end
+
+
+--create trigger Update_Ban    班级更新
+--on Liust_Class
+--for update
+--as
+--if update(lst_Clno)
+--begin
+--update Liust_Student
+--set lst_Sclasno=Lns.lst_Clno
+--from deleted De,inserted Lns,Liust_Student K
+--where K.lst_Sclasno=De.lst_Clno
+--end
+--begin
+--update Liust_ClassCourse
+--set lst_Clno=Lns.lst_Clno
+--from deleted De,inserted Lns,Liust_ClassCourse Q
+--where Q.lst_Clno=De.lst_Clno
+--end
+
+
+--create table Liust_StuLogin
+--(
+--    lst_LoginSName char(20) primary key,
+--    lst_LoginSPas char(20)
+--)
+--drop table Liust_StuLogin
+--drop table Liust_TeaLogin
+--create table Liust_TeaLogin
+--(
+--   lst_LoginTName char(20) primary key,
+--   lst_LoginTPas  char(20)
+--)
+
+--insert into Liust_StuLogin
+--values('201326811412','123456')
+--insert into Liust_StuLogin
+--values('201326811411','123456')
+
+--select *
+--from Liust_StuLogin
+--delete 
+--from Liust_StuLogin
+--where lst_LoginSName='201326811414'
+
+
+--insert into Liust_TeaLogin
+--values('T01','123456')
+----delete 
+----from Liust_TeaLogin
+----where lst_LoginTName='于明远'
+--delete 
+--from Liust_StuLogin
+--where lst_LoginSName='刘士涛'
+
+
+--grant all privileges
+--on Liust_StuLogin
+--to tach1
+
+
+--grant all privileges
+--on Liust_TeaLogin
+--to tach1
+
+--grant all privileges
+--on Auto_GetCredit
+--to tach1
+
