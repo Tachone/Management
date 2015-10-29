@@ -1,7 +1,10 @@
 # Management
-C# SQL for student 
-
-My homework for SQL .
-It's a managent system for student at college based on C#.
-Maybe there are some bugs.
-Hope more suggestions.
+学生教务管理系统
+------
+    使用C#语言和SQL Server数据库实现。
+    不涉及复杂的数据结构和算法，仅是为了熟悉和掌握SQL的项目。
+    主要涉及基本的SQL增删查改的语句、权限控制、触发器和关系连接。
+    交互界面友好简介，权限分明。
+    
+    如果有疑问或者修改的意见，欢迎联系我！
+    邮箱：acm_tach@163.com
